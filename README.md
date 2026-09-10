@@ -20,7 +20,7 @@
 ## 🛠️ Технології
 - HTML
 - CSS
-- (за потреби можна додати JavaScript)
+- JavaScript
 
 ## 📖 Примітка
 Проєкт може оновлюватися та розширюватися новими вигаданими елементами світу.
@@ -50,7 +50,7 @@ The author of this project independently created this country and all related wo
 ## 🛠️ Technologies Used
 - HTML
 - CSS
-- (optional) JavaScript
+- JavaScript
 
 ## 📖 Note
 This project may be updated and expanded with new fictional world elements over time.
