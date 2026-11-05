@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    
+<object
+    id="bizantariaMap"
+    data="img/bizantaria_map.svg"
+    type="image/svg+xml"
+    width="720"
+    height="630">
+</object>
+<script>
+    const colors = {
+        white: "#FFFFFF",
+        yellow: "#FFD400",
+        red: "#E32636",
+        black: "#000000",
+    };
+
+    const map = document.getElementById("bizantariaMap");
+
+    map.addEventListener("load", async () => {
+        const svg = map.contentDocument;
+
+        const response = await fetch("warnings.json");
+        const warnings = await response.json();
+
+        for (const [regionId, status] of Object.entries(warnings)) {
+            const region = svg.getElementById(regionId);
+
+            if (region && colors[status]) {
+                region.style.fill = colors[status];
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
