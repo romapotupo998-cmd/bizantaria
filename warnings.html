@@ -96,6 +96,8 @@
         for (const [regionId, status] of Object.entries(data.warnings)) {
             const region = svg.getElementById(regionId);
 
+            console.log(regionId, status, region);
+
             if (region && colors[status]) {
                 region.style.fill = colors[status];
             }
