@@ -6,10 +6,63 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="warnings.css">
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="warnings.css">
+    <style>
+        .warning-info {
+            position: fixed;
+            display: none;
+            background: rgba(20, 20, 20, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            max-width: 250px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .warning-info h3 {
+            margin: 0 0 6px;
+            font-size: 17px;
+        }
+
+        .warning-info p {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
 </head>
 <body>
-    
+
+<input type="checkbox" name="navbar" id="navbar">
+    <label for="navbar">
+        <div class="nav">МЕНЮ</div>
+    </label>
+
+<ul>
+    <li><a href="index.html">Головна</a></li>
+    <li><a href="wiki.html">WIKI РБ</a></li>
+    <li><a href="government.html">Уряд РБ</a></li>
+    <li><a href="telekanaly.html">Усі офіційні телеканали Бізантарії</a></li>
+    <li><a href="diplomacy.html">Міжнародні Відносини</a></li>
+    <li><a href="zakony.html">Закони РБ</a></li>
+    <li><a href="currency.html">Курси Валют</a></li>
+    <li><a href="alfabet.html">Алфавіт РБ</a></li>
+    <li><a href="warnings.html">Мапа попереджень</a></li>
+</ul>
+
+<h1 class="map">Мапа попереджень</h1>   
+
 <object
     id="bizantariaMap"
     data="img/bizantaria_map.svg"
@@ -17,12 +70,18 @@
     width="720"
     height="630">
 </object>
+
+<div id="warningInfo" class="warning-info" style="display: none;">
+    <h3 id="warningTitle"></h3>
+    <p id="warningDescription"></p>
+</div>
+
 <script>
     const colors = {
         white: "#FFFFFF",
         yellow: "#FFD400",
         red: "#E32636",
-        black: "#000000",
+        black: "#000000"
     };
 
     const map = document.getElementById("bizantariaMap");
@@ -31,14 +90,49 @@
         const svg = map.contentDocument;
 
         const response = await fetch("warnings.json");
-        const warnings = await response.json();
+        const data = await response.json();
 
-        for (const [regionId, status] of Object.entries(warnings)) {
+        // Фарбування регіонів
+        for (const [regionId, status] of Object.entries(data.warnings)) {
             const region = svg.getElementById(regionId);
 
             if (region && colors[status]) {
                 region.style.fill = colors[status];
             }
+        }
+
+        // Елементи інформаційного повідомлення
+        const warningInfo = document.getElementById("warningInfo");
+        const warningTitle = document.getElementById("warningTitle");
+        const warningDescription = document.getElementById("warningDescription");
+
+        // Інформація про попередження
+        for (const [regionId, info] of Object.entries(data.info)) {
+            const region = svg.getElementById(regionId);
+
+            if (!region) continue;
+
+            region.style.cursor = "pointer";
+
+            // Показ повідомлення
+            region.addEventListener("mouseenter", () => {
+                warningTitle.textContent = info.title;
+                warningDescription.textContent = info.description;
+                warningInfo.style.display = "block";
+            });
+
+            // Рух повідомлення за курсором
+            region.addEventListener("mousemove", (event) => {
+                warningInfo.style.position = "fixed";
+                warningInfo.style.left = `${event.clientX + 15}px`;
+                warningInfo.style.top =
+                    `${event.clientY - warningInfo.offsetHeight / 2}px`;
+            });
+
+            // Приховування повідомлення
+            region.addEventListener("mouseleave", () => {
+                warningInfo.style.display = "none";
+            });
         }
     });
 </script>
